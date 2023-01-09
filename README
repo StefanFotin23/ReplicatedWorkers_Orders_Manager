@@ -1,0 +1,49 @@
+Tema2 APD
+Fotin Andrei-Stefan 336CA
+
+
+Programul se bazeaza pe modelul Replicated Workers.
+
+Arhitectura programului e bazata pe 3 clase si 3 layere de threaduri.
+Avem clasele Main, OrderRunnable si ProductsRunnable.
+Main este threadul principal (lvl 0), care creeaza un thread Order de lvl 1.
+Si threadurile Order creeaza threadurile Product de lvl 2.
+
+Threadul Main creeaza un pool de threaduri Order, care permite rularea
+concomitenta a P threaduri.
+Fiecare thread Order creeaza cate un pool distinct de threaduri Products,
+care permite rularea concomitenta a 1 thread.
+
+Astfel vom avea maxim P threaduri de lvl 1 care ruleaza deodata si maxim
+P * 1 = P threaduri de lvl 2 care ruleaza deodata.
+
+In Main cream un Scanner care citeste continutul fisierului cu orders
+si il dam ca parametru fiecarui thread Order.
+Fiecare thread va citi cate o linie si o va prelucra ca sa obtina
+orderName si numarul de produse din order.
+Threadurile Order vor creea mai departe threaduri Order atata timp cat mai
+exista
+un "next line" necitit in fisierul order.
+Totodata threadul Order, dupa ce citeste order Name si nr de produse,
+va creea un pool de threaduri Product care va primi ca parametri in plus:
+orderName (ca sa stie ce order trebuie sa caute in fisier), nr de produse
+(ca sa stie cand trebuie sa se opreasca) si va primi un Scanner nou creat
+pentru a citi de la inceputul fisierului cu produse.
+
+In threadul Product vom citi (similar ca la threadul Order) fiecare linie din
+fisierul de produse. Vom verifica daca linia citita contine Orderul cautat si
+daca da, incrementam contorul atomic int shippedProducts.
+Acesta foloseste ca sa stim in timp real cate produse am Shippuit.
+Dupa ce gasim un produs din comanda noastra il scriem in fisierul de out
+si dam Ship la el. Si daca am ajuns cu shippedProducts == nr de produse din
+Orderul cautat, inseamna ca le-am trimis pe toate si putem pune Ship si la
+intrega comanda.
+
+La inceput in Main cream fisierele de out si le golim (scriem "" in ele) si in
+rest,
+pentru sciere folosim FileWriter cu append = true.
+
+Pentru ca scrierea sa fie gata si trimisa din buffer in fisier, inchidem
+writer-ul dupa ce am terminat de scris.
+
+In cod am ai pus diverse sout-uri pt debugging.
