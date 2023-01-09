@@ -46,4 +46,4 @@ pentru sciere folosim FileWriter cu append = true.
 Pentru ca scrierea sa fie gata si trimisa din buffer in fisier, inchidem
 writer-ul dupa ce am terminat de scris.
 
-In cod am ai pus diverse sout-uri pt debugging.
+(In cod am mai pus diverse sout-uri pt debugging.)
